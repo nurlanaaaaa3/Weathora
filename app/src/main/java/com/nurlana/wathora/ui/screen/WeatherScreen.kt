@@ -215,26 +215,121 @@ fun WeatherScreen(
                             )
                         }
                     }
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        TextButton(onClick = { onChangeLanguage("id") }) {
-                            Text("ID", color = WhiteText, fontWeight = FontWeight.Bold)
-                        }
-                        TextButton(onClick = { onChangeLanguage("en") }) {
-                            Text("EN", color = WhiteText.copy(alpha = 0.6f))
-                        }
-                        IconButton(onClick = { viewModel.refresh() }) {
-                            Text(text = "🔄", fontSize = 20.sp)
-                        }
-                        IconButton(onClick = { onToggleDarkMode() }) {
-                            Text(
-                                text = if (isDarkMode) "☀️" else "🌙",
-                                fontSize = 20.sp
-                            )
-                        }
-                        IconButton(onClick = { onLogout() }) {
-                            Text(text = "🚪", fontSize = 20.sp)
-                        }
+                    var showSettings by remember { mutableStateOf(false) }
+
+                    if (showSettings) {
+                        AlertDialog(
+                            onDismissRequest = { showSettings = false },
+                            confirmButton = {
+                                TextButton(onClick = { showSettings = false }) {
+                                    Text("Tutup")
+                                }
+                            },
+                            title = {
+                                Text(
+                                    text = "⚙️ Pengaturan",
+                                    fontWeight = FontWeight.Bold
+                                )
+                            },
+                            text = {
+                                Column(
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = "Bahasa",
+                                        fontSize = 12.sp,
+                                        color = Color.Gray
+                                    )
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Button(
+                                            onClick = {
+                                                onChangeLanguage("id")
+                                                showSettings = false
+                                            },
+                                            modifier = Modifier.weight(1f),
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = Color(0xFF1A9ED4)
+                                            )
+                                        ) {
+                                            Text("🇮🇩 Indonesia")
+                                        }
+                                        Button(
+                                            onClick = {
+                                                onChangeLanguage("en")
+                                                showSettings = false
+                                            },
+                                            modifier = Modifier.weight(1f),
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = Color(0xFF1A9ED4)
+                                            )
+                                        ) {
+                                            Text("🇬🇧 English")
+                                        }
+                                    }
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    HorizontalDivider()
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    Text(
+                                        text = "Tampilan",
+                                        fontSize = 12.sp,
+                                        color = Color.Gray
+                                    )
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Button(
+                                        onClick = {
+                                            onToggleDarkMode()
+                                            showSettings = false
+                                        },
+                                        modifier = Modifier.fillMaxWidth(),
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color(0xFF1A9ED4)
+                                        )
+                                    ) {
+                                        Text(
+                                            text = if (isDarkMode) "☀️ Mode Terang" else "🌙 Mode Gelap"
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Button(
+                                        onClick = {
+                                            viewModel.refresh()
+                                            showSettings = false
+                                        },
+                                        modifier = Modifier.fillMaxWidth(),
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color(0xFF1A9ED4)
+                                        )
+                                    ) {
+                                        Text("🔄 Refresh Data")
+                                    }
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    HorizontalDivider()
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    Button(
+                                        onClick = {
+                                            showSettings = false
+                                            onLogout()
+                                        },
+                                        modifier = Modifier.fillMaxWidth(),
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color.Red
+                                        )
+                                    ) {
+                                        Text("🚪 Logout", color = Color.White)
+                                    }
+                                }
+                            }
+                        )
                     }
+
+                    IconButton(onClick = { showSettings = true }) {
+                        Text(text = "⚙️", fontSize = 24.sp)
+                    }
+
                 }
                 Spacer(modifier = Modifier.height(16.dp))
             }

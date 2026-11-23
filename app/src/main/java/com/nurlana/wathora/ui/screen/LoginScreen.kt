@@ -61,27 +61,27 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                         contentAlignment = Alignment.Center,
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        Text(text = "🌤", fontSize = 24.sp)
+                        Text(text = "🌤", fontSize = 37.sp)
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Welcome back",
-                    fontSize = 24.sp,
+                    fontSize = 48.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF1A1A2E)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "Please enter your details to sign in.",
-                    fontSize = 14.sp,
+                    fontSize = 20.sp,
                     color = Color.Gray
                 )
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
                     text = "Email",
-                    fontSize = 14.sp,
+                    fontSize = 25.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color(0xFF1A1A2E)
                 )
@@ -107,13 +107,13 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                 ) {
                     Text(
                         text = "Password",
-                        fontSize = 14.sp,
+                        fontSize = 25.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color(0xFF1A1A2E)
                     )
                     Text(
                         text = "Forgot password?",
-                        fontSize = 14.sp,
+                        fontSize = 17.sp,
                         color = Color(0xFF1A9ED4),
                         fontWeight = FontWeight.Medium
                     )

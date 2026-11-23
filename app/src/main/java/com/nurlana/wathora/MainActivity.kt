@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
@@ -21,6 +22,7 @@ import com.nurlana.wathora.ui.screen.SplashScreen
 import com.nurlana.wathora.ui.screen.WeatherScreen
 import com.nurlana.wathora.ui.theme.WathoraTheme
 import com.nurlana.wathora.viewmodel.WeatherViewModel
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,8 +43,10 @@ class MainActivity : AppCompatActivity() {
         setContent {
             weatherViewModel = viewModel()
             var isDarkMode by remember { mutableStateOf(false) }
-            var showSplash by remember { mutableStateOf(true) }
-            var isLoggedIn by remember { mutableStateOf(false) }
+            var showSplash by rememberSaveable { mutableStateOf(true) }
+            var isLoggedIn by rememberSaveable { mutableStateOf(false) }
+
+
 
             WathoraTheme(darkTheme = isDarkMode) {
                 Surface(

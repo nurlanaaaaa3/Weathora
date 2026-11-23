@@ -47,12 +47,12 @@ fun SplashScreen(onSplashFinished: () -> Unit) {
         ) {
             Text(
                 text = "🌤",
-                fontSize = 80.sp
+                fontSize = 100.sp
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "WEATHORA",
-                fontSize = 32.sp,
+                fontSize = 62.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 letterSpacing = 6.sp
@@ -60,15 +60,16 @@ fun SplashScreen(onSplashFinished: () -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Your quick weather report",
-                fontSize = 14.sp,
+                fontSize = 28.sp,
                 color = Color.White.copy(alpha = 0.8f)
             )
             Spacer(modifier = Modifier.height(48.dp))
             Text(
                 text = "Tap to continue",
-                fontSize = 14.sp,
+                fontSize = 20.sp,
                 color = Color.White.copy(alpha = 0.6f)
             )
+
         }
     }
 }
