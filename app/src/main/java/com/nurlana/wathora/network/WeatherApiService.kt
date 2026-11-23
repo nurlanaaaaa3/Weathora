@@ -1,6 +1,7 @@
 package com.nurlana.wathora.network
 
 import com.nurlana.wathora.model.WeatherForecastResponse
+import com.nurlana.wathora.model.WeatherHourlyResponse
 import com.nurlana.wathora.model.WeatherResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -21,4 +22,12 @@ interface WeatherApiService {
         @Query("daily") daily: String,
         @Query("forecast_days") forecastDays: Int
     ): WeatherForecastResponse
+
+    @GET("forecast")
+    suspend fun getHourlyWeather(
+        @Query("latitude") latitude: Double,
+        @Query("longitude") longitude: Double,
+        @Query("hourly") hourly: String,
+        @Query("forecast_days") forecastDays: Int
+    ): WeatherHourlyResponse
 }

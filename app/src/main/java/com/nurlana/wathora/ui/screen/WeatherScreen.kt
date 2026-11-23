@@ -1,8 +1,10 @@
 package com.nurlana.wathora.ui.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -88,22 +90,96 @@ fun getWeatherDescription(code: Int): String {
 }
 
 @Composable
+fun WeatherInfoCard(
+    emoji: String,
+    label: String,
+    value: String,
+    description: String = "",
+    modifier: Modifier = Modifier
+) {
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            confirmButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text("OK")
+                }
+            },
+            title = {
+                Text(
+                    text = "$emoji $label",
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Column {
+                    Text(
+                        text = value,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = description)
+                }
+            }
+        )
+    }
+
+    Card(
+        modifier = modifier.clickable { showDialog = true },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = WhiteText.copy(alpha = 0.15f)
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(text = emoji, fontSize = 24.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = label,
+                fontSize = 12.sp,
+                color = WhiteText.copy(alpha = 0.7f)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = value,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = WhiteText
+            )
+        }
+    }
+}
+
+@Composable
 fun WeatherScreen(
     viewModel: WeatherViewModel = viewModel(),
+    isDarkMode: Boolean = false,
+    onToggleDarkMode: () -> Unit = {},
     onChangeLanguage: (String) -> Unit = {}
 ) {
     val currentWeather by viewModel.currentWeather.collectAsState()
     val forecast by viewModel.forecast.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
+    val hourlyWeather by viewModel.hourlyWeather.collectAsState()
 
     var cityInput by remember { mutableStateOf("") }
     var cityName by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
 
-    val gradientColors = currentWeather?.let {
-        getWeatherGradient(it.current.weatherCode)
-    } ?: listOf(GradientStart, GradientEnd)
+    val gradientColors = if (isDarkMode) {
+        listOf(Color(0xFF0D1B2A), Color(0xFF1B2B3A))
+    } else {
+        listOf(Color(0xFF1A9ED4), Color(0xFF3DB8E8))
+    }
 
     Box(
         modifier = Modifier
@@ -123,19 +199,37 @@ fun WeatherScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "WEATHORA",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = WhiteText,
-                        letterSpacing = 4.sp
-                    )
-                    Row {
+                    Column {
+                        Text(
+                            text = if (cityName.isEmpty()) "WEATHORA" else cityName.replaceFirstChar { it.uppercase() },
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = WhiteText
+                        )
+                        if (cityName.isNotEmpty()) {
+                            Text(
+                                text = "📍 $cityName",
+                                fontSize = 14.sp,
+                                color = WhiteText.copy(alpha = 0.7f)
+                            )
+                        }
+                    }
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         TextButton(onClick = { onChangeLanguage("id") }) {
                             Text("ID", color = WhiteText, fontWeight = FontWeight.Bold)
                         }
                         TextButton(onClick = { onChangeLanguage("en") }) {
                             Text("EN", color = WhiteText.copy(alpha = 0.6f))
+                        }
+                        IconButton(onClick = { viewModel.refresh() }) {
+                            Text(text = "🔄", fontSize = 20.sp)
+                        }
+                        IconButton(onClick = { onToggleDarkMode() }) {
+                            Text(
+                                text = if (isDarkMode) "☀️" else "🌙",
+                                fontSize = 20.sp
+                            )
                         }
                     }
                 }
@@ -235,18 +329,6 @@ fun WeatherScreen(
 
             item {
                 currentWeather?.let { weather ->
-                    Spacer(modifier = Modifier.height(16.dp))
-                    if (cityName.isNotEmpty()) {
-                        Text(
-                            text = cityName.replaceFirstChar { it.uppercase() },
-                            fontSize = 32.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = WhiteText,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = getWeatherEmoji(weather.current.weatherCode),
                         fontSize = 80.sp,
@@ -255,7 +337,7 @@ fun WeatherScreen(
                     )
                     Text(
                         text = "${weather.current.temperature}°C",
-                        fontSize = 64.sp,
+                        fontSize = 72.sp,
                         fontWeight = FontWeight.Bold,
                         color = WhiteText,
                         textAlign = TextAlign.Center,
@@ -268,59 +350,160 @@ fun WeatherScreen(
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
+                    Text(
+                        text = "${weather.current.temperature - 2}° / ${weather.current.temperature + 2}°",
+                        fontSize = 14.sp,
+                        color = WhiteText.copy(alpha = 0.7f),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                     Spacer(modifier = Modifier.height(24.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        WeatherInfoCard(
+                            emoji = "🌡️",
+                            label = "Terasa seperti",
+                            value = "${weather.current.feelsLike}°",
+                            description = "Suhu yang dirasakan tubuh berdasarkan kelembapan dan angin.",
+                            modifier = Modifier.weight(1f)
+                        )
+                        WeatherInfoCard(
+                            emoji = "💧",
+                            label = stringResource(R.string.humidity),
+                            value = "${weather.current.humidity}%",
+                            description = when {
+                                weather.current.humidity < 30 -> "Kelembapan rendah. Udara terasa kering."
+                                weather.current.humidity < 60 -> "Kelembapan normal. Kondisi nyaman."
+                                weather.current.humidity < 80 -> "Kelembapan tinggi. Udara terasa lembap."
+                                else -> "Kelembapan sangat tinggi. Tidak nyaman."
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                        WeatherInfoCard(
+                            emoji = "☀️",
+                            label = "UV Index",
+                            value = "${weather.current.uvIndex}",
+                            description = when {
+                                weather.current.uvIndex < 3 -> "UV Rendah. Aman beraktivitas di luar."
+                                weather.current.uvIndex < 6 -> "UV Sedang. Gunakan tabir surya."
+                                weather.current.uvIndex < 8 -> "UV Tinggi. Hindari paparan langsung."
+                                weather.current.uvIndex < 11 -> "UV Sangat Tinggi. Gunakan pelindung."
+                                else -> "UV Ekstrem. Hindari keluar ruangan."
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        WeatherInfoCard(
+                            emoji = "💨",
+                            label = stringResource(R.string.wind),
+                            value = "${weather.current.windSpeed} km/h",
+                            description = when {
+                                weather.current.windSpeed < 20 -> "Angin lemah. Kondisi tenang."
+                                weather.current.windSpeed < 40 -> "Angin sedang. Terasa di wajah."
+                                weather.current.windSpeed < 60 -> "Angin kencang. Hati-hati berkendara."
+                                else -> "Angin sangat kencang. Berbahaya!"
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                        WeatherInfoCard(
+                            emoji = "🌬️",
+                            label = "Tekanan",
+                            value = "${weather.current.pressure} hPa",
+                            description = when {
+                                weather.current.pressure < 1000 -> "Tekanan rendah. Kemungkinan hujan."
+                                weather.current.pressure < 1013 -> "Tekanan normal. Cuaca stabil."
+                                else -> "Tekanan tinggi. Cuaca cerah."
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                        WeatherInfoCard(
+                            emoji = "👁️",
+                            label = "Visibilitas",
+                            value = "${"%.1f".format(weather.current.visibility / 1000)} km",
+                            description = when {
+                                weather.current.visibility < 1000 -> "Visibilitas sangat rendah. Kabut tebal."
+                                weather.current.visibility < 5000 -> "Visibilitas rendah. Hati-hati berkendara."
+                                weather.current.visibility < 10000 -> "Visibilitas sedang. Cukup jelas."
+                                else -> "Visibilitas baik. Pandangan jelas."
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+            }
+
+            item {
+                hourlyWeather?.let { hourlyData ->
+                    Text(
+                        text = "Prakiraan Per Jam",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = WhiteText,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp)
+                    )
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(20.dp),
+                        shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = WhiteText.copy(alpha = 0.2f)
+                            containerColor = WhiteText.copy(alpha = 0.15f)
                         )
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(20.dp),
-                            horizontalArrangement = Arrangement.SpaceEvenly
+                        val currentHour = java.util.Calendar.getInstance()
+                            .get(java.util.Calendar.HOUR_OF_DAY)
+                        val startIndex = hourlyData.hourly.times.indexOfFirst {
+                            it.substring(11, 13).toInt() >= currentHour
+                        }.coerceAtLeast(0)
+                        val endIndex = (startIndex + 8)
+                            .coerceAtMost(hourlyData.hourly.times.size)
+
+                        LazyRow(
+                            modifier = Modifier.padding(12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(text = "💧", fontSize = 28.sp)
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = "${weather.current.humidity}%",
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = WhiteText
-                                )
-                                Text(
-                                    text = stringResource(R.string.humidity),
-                                    fontSize = 12.sp,
-                                    color = WhiteText.copy(alpha = 0.8f)
-                                )
-                            }
-                            HorizontalDivider(
-                                modifier = Modifier
-                                    .height(60.dp)
-                                    .width(1.dp),
-                                color = WhiteText.copy(alpha = 0.4f)
-                            )
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(text = "💨", fontSize = 28.sp)
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = "${weather.current.windSpeed} km/h",
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = WhiteText
-                                )
-                                Text(
-                                    text = stringResource(R.string.wind),
-                                    fontSize = 12.sp,
-                                    color = WhiteText.copy(alpha = 0.8f)
-                                )
+                            items((endIndex - startIndex)) { i ->
+                                val index = startIndex + i
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.padding(4.dp)
+                                ) {
+                                    Text(
+                                        text = hourlyData.hourly.times[index].substring(11, 16),
+                                        fontSize = 12.sp,
+                                        color = WhiteText.copy(alpha = 0.7f)
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = getWeatherEmoji(hourlyData.hourly.weatherCodes[index]),
+                                        fontSize = 24.sp
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = "${hourlyData.hourly.temperatures[index]}°",
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = WhiteText
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = "💧${hourlyData.hourly.precipitationProbability[index]}%",
+                                        fontSize = 11.sp,
+                                        color = WhiteText.copy(alpha = 0.8f)
+                                    )
+                                }
                             }
                         }
                     }
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
 
@@ -346,7 +529,7 @@ fun WeatherScreen(
                             .padding(vertical = 4.dp),
                         shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = WhiteText.copy(alpha = 0.2f)
+                            containerColor = WhiteText.copy(alpha = 0.15f)
                         )
                     ) {
                         Row(
