@@ -1,3 +1,21 @@
 <resources>
-    <string name="app_name">Wathora</string>
+    <string name="app_name">Weathora</string>
+    <string name="search_hint">Cari Kota...</string>
+    <string name="search_button">Cari</string>
+    <string name="welcome_title">Selamat Datang!</string>
+    <string name="welcome_subtitle">Cari nama kota untuk\nmelihat informasi cuaca</string>
+    <string name="humidity">Kelembapan</string>
+    <string name="wind">Angin</string>
+    <string name="forecast_title">Prakiraan 7 Hari</string>
+    <string name="city_not_found">Kota \'%s\' tidak ditemukan</string>
+    <string name="failed_load">Gagal memuat data cuaca</string>
+    <string name="weather_sunny">Cerah</string>
+    <string name="weather_cloudy">Berawan</string>
+    <string name="weather_foggy">Berkabut</string>
+    <string name="weather_drizzle">Gerimis</string>
+    <string name="weather_rain">Hujan</string>
+    <string name="weather_snow">Hujan Salju</string>
+    <string name="weather_heavy_rain">Hujan Lebat</string>
+    <string name="weather_storm">Badai Petir</string>
+    <string name="weather_unknown">Tidak Diketahui</string>
 </resources>

@@ -11,28 +11,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nurlana.wathora.R
 import com.nurlana.wathora.ui.theme.*
 import com.nurlana.wathora.viewmodel.WeatherViewModel
 import kotlinx.coroutines.launch
-
-fun getWeatherDescription(code: Int): String {
-    return when (code) {
-        0 -> "Cerah"
-        1, 2, 3 -> "Berawan"
-        45, 48 -> "Berkabut"
-        51, 53, 55 -> "Gerimis"
-        61, 63, 65 -> "Hujan"
-        71, 73, 75 -> "Hujan Salju"
-        80, 81, 82 -> "Hujan Lebat"
-        95 -> "Badai Petir"
-        else -> "Tidak Diketahui"
-    }
-}
 
 fun getWeatherEmoji(code: Int): String {
     return when (code) {
@@ -85,7 +73,25 @@ suspend fun getCityCoordinates(cityName: String): Pair<Double, Double>? {
 }
 
 @Composable
-fun WeatherScreen(viewModel: WeatherViewModel = viewModel()) {
+fun getWeatherDescription(code: Int): String {
+    return when (code) {
+        0 -> stringResource(R.string.weather_sunny)
+        1, 2, 3 -> stringResource(R.string.weather_cloudy)
+        45, 48 -> stringResource(R.string.weather_foggy)
+        51, 53, 55 -> stringResource(R.string.weather_drizzle)
+        61, 63, 65 -> stringResource(R.string.weather_rain)
+        71, 73, 75 -> stringResource(R.string.weather_snow)
+        80, 81, 82 -> stringResource(R.string.weather_heavy_rain)
+        95 -> stringResource(R.string.weather_storm)
+        else -> stringResource(R.string.weather_unknown)
+    }
+}
+
+@Composable
+fun WeatherScreen(
+    viewModel: WeatherViewModel = viewModel(),
+    onChangeLanguage: (String) -> Unit = {}
+) {
     val currentWeather by viewModel.currentWeather.collectAsState()
     val forecast by viewModel.forecast.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
@@ -112,13 +118,27 @@ fun WeatherScreen(viewModel: WeatherViewModel = viewModel()) {
         ) {
             item {
                 Spacer(modifier = Modifier.height(32.dp))
-                Text(
-                    text = "WEATHORA",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = WhiteText,
-                    letterSpacing = 4.sp
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "WEATHORA",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = WhiteText,
+                        letterSpacing = 4.sp
+                    )
+                    Row {
+                        TextButton(onClick = { onChangeLanguage("id") }) {
+                            Text("ID", color = WhiteText, fontWeight = FontWeight.Bold)
+                        }
+                        TextButton(onClick = { onChangeLanguage("en") }) {
+                            Text("EN", color = WhiteText.copy(alpha = 0.6f))
+                        }
+                    }
+                }
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
@@ -130,7 +150,7 @@ fun WeatherScreen(viewModel: WeatherViewModel = viewModel()) {
                     OutlinedTextField(
                         value = cityInput,
                         onValueChange = { cityInput = it },
-                        label = { Text("Cari Kota...", color = WhiteText) },
+                        label = { Text(stringResource(R.string.search_hint), color = WhiteText) },
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(16.dp),
                         singleLine = true,
@@ -159,7 +179,7 @@ fun WeatherScreen(viewModel: WeatherViewModel = viewModel()) {
                         ),
                         shape = RoundedCornerShape(16.dp)
                     ) {
-                        Text("Cari", color = WhiteText)
+                        Text(stringResource(R.string.search_button), color = WhiteText)
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -195,7 +215,7 @@ fun WeatherScreen(viewModel: WeatherViewModel = viewModel()) {
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Selamat Datang!",
+                        text = stringResource(R.string.welcome_title),
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = WhiteText,
@@ -204,7 +224,7 @@ fun WeatherScreen(viewModel: WeatherViewModel = viewModel()) {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Cari nama kota untuk\nmelihat informasi cuaca",
+                        text = stringResource(R.string.welcome_subtitle),
                         fontSize = 16.sp,
                         color = WhiteText.copy(alpha = 0.8f),
                         textAlign = TextAlign.Center,
@@ -272,7 +292,7 @@ fun WeatherScreen(viewModel: WeatherViewModel = viewModel()) {
                                     color = WhiteText
                                 )
                                 Text(
-                                    text = "Kelembapan",
+                                    text = stringResource(R.string.humidity),
                                     fontSize = 12.sp,
                                     color = WhiteText.copy(alpha = 0.8f)
                                 )
@@ -293,7 +313,7 @@ fun WeatherScreen(viewModel: WeatherViewModel = viewModel()) {
                                     color = WhiteText
                                 )
                                 Text(
-                                    text = "Angin",
+                                    text = stringResource(R.string.wind),
                                     fontSize = 12.sp,
                                     color = WhiteText.copy(alpha = 0.8f)
                                 )
@@ -307,7 +327,7 @@ fun WeatherScreen(viewModel: WeatherViewModel = viewModel()) {
             item {
                 forecast?.let {
                     Text(
-                        text = "Prakiraan 7 Hari",
+                        text = stringResource(R.string.forecast_title),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = WhiteText,
