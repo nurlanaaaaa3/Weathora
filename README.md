@@ -101,10 +101,3 @@ saat dibuka. Selain itu, aplikasi mendukung multi bahasa (Indonesia dan Inggris)
 serta mode gelap untuk kenyamanan pengguna. Data cuaca yang ditampilkan lengkap
 mulai dari suhu, kelembapan, angin, UV Index, tekanan udara, visibilitas,
 prakiraan per jam, hingga prakiraan 7 hari ke depan.
-
-## Developer
-
-- **Nama**: Nurlana
-- **Package**: com.nurlana.wathora
-- **Min SDK**: 24 (Android 7.0)
-- **Target SDK**: 36
