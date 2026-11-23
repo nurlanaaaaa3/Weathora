@@ -63,4 +63,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(libs.androidx.appcompat)
     implementation(libs.play.services.location)
+    implementation(libs.androidx.compose.material.icons)
+
 }
