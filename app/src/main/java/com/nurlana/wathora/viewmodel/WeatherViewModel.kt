@@ -28,13 +28,26 @@ class WeatherViewModel : ViewModel() {
             _isLoading.value = true
             _errorMessage.value = null
             try {
-                _currentWeather.value = RetrofitInstance.api.getCurrentWeather(latitude, longitude)
-                _forecast.value = RetrofitInstance.api.getWeatherForecast(latitude, longitude)
+                _currentWeather.value = RetrofitInstance.api.getCurrentWeather(
+                    latitude = latitude,
+                    longitude = longitude,
+                    current = "temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code"
+                )
+                _forecast.value = RetrofitInstance.api.getWeatherForecast(
+                    latitude = latitude,
+                    longitude = longitude,
+                    daily = "weather_code,temperature_2m_max,temperature_2m_min",
+                    forecastDays = 7
+                )
             } catch (e: Exception) {
                 _errorMessage.value = "Gagal memuat data cuaca: ${e.message}"
             } finally {
                 _isLoading.value = false
             }
         }
+    }
+
+    fun setError(message: String) {
+        _errorMessage.value = message
     }
 }
