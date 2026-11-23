@@ -3,6 +3,7 @@ package com.nurlana.wathora.ui.screen
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -27,8 +28,6 @@ fun SplashScreen(onSplashFinished: () -> Unit) {
 
     LaunchedEffect(key1 = true) {
         startAnimation = true
-        delay(2500)
-        onSplashFinished()
     }
 
     Box(
@@ -38,7 +37,8 @@ fun SplashScreen(onSplashFinished: () -> Unit) {
                 brush = Brush.verticalGradient(
                     colors = listOf(Color(0xFF1A9ED4), Color(0xFF3DB8E8))
                 )
-            ),
+            )
+            .clickable { onSplashFinished() },
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -62,6 +62,12 @@ fun SplashScreen(onSplashFinished: () -> Unit) {
                 text = "Your quick weather report",
                 fontSize = 14.sp,
                 color = Color.White.copy(alpha = 0.8f)
+            )
+            Spacer(modifier = Modifier.height(48.dp))
+            Text(
+                text = "Tap to continue",
+                fontSize = 14.sp,
+                color = Color.White.copy(alpha = 0.6f)
             )
         }
     }

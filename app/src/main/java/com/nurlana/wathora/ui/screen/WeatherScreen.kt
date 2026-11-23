@@ -163,7 +163,8 @@ fun WeatherScreen(
     viewModel: WeatherViewModel = viewModel(),
     isDarkMode: Boolean = false,
     onToggleDarkMode: () -> Unit = {},
-    onChangeLanguage: (String) -> Unit = {}
+    onChangeLanguage: (String) -> Unit = {},
+    onLogout: () -> Unit = {}
 ) {
     val currentWeather by viewModel.currentWeather.collectAsState()
     val forecast by viewModel.forecast.collectAsState()
@@ -214,7 +215,6 @@ fun WeatherScreen(
                             )
                         }
                     }
-
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         TextButton(onClick = { onChangeLanguage("id") }) {
                             Text("ID", color = WhiteText, fontWeight = FontWeight.Bold)
@@ -230,6 +230,9 @@ fun WeatherScreen(
                                 text = if (isDarkMode) "☀️" else "🌙",
                                 fontSize = 20.sp
                             )
+                        }
+                        IconButton(onClick = { onLogout() }) {
+                            Text(text = "🚪", fontSize = 20.sp)
                         }
                     }
                 }
@@ -470,7 +473,7 @@ fun WeatherScreen(
                             modifier = Modifier.padding(12.dp),
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            items((endIndex - startIndex)) { i ->
+                            items(endIndex - startIndex) { i ->
                                 val index = startIndex + i
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,

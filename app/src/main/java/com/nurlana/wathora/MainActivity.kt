@@ -16,6 +16,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.location.LocationServices
+import com.nurlana.wathora.ui.screen.LoginScreen
+import com.nurlana.wathora.ui.screen.SplashScreen
 import com.nurlana.wathora.ui.screen.WeatherScreen
 import com.nurlana.wathora.ui.theme.WathoraTheme
 import com.nurlana.wathora.viewmodel.WeatherViewModel
@@ -39,25 +41,44 @@ class MainActivity : AppCompatActivity() {
         setContent {
             weatherViewModel = viewModel()
             var isDarkMode by remember { mutableStateOf(false) }
+            var showSplash by remember { mutableStateOf(true) }
+            var isLoggedIn by remember { mutableStateOf(false) }
 
             WathoraTheme(darkTheme = isDarkMode) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = Color.Transparent
                 ) {
-                    WeatherScreen(
-                        viewModel = weatherViewModel,
-                        isDarkMode = isDarkMode,
-                        onToggleDarkMode = { isDarkMode = !isDarkMode },
-                        onChangeLanguage = { languageCode ->
-                            val appLocale = LocaleListCompat.forLanguageTags(languageCode)
-                            AppCompatDelegate.setApplicationLocales(appLocale)
+                    when {
+                        showSplash -> {
+                            SplashScreen(
+                                onSplashFinished = { showSplash = false }
+                            )
                         }
-                    )
+                        !isLoggedIn -> {
+                            LoginScreen(
+                                onLoginSuccess = {
+                                    isLoggedIn = true
+                                    checkLocationPermission()
+                                }
+                            )
+                        }
+                        else -> {
+                            WeatherScreen(
+                                viewModel = weatherViewModel,
+                                isDarkMode = isDarkMode,
+                                onToggleDarkMode = { isDarkMode = !isDarkMode },
+                                onChangeLanguage = { languageCode ->
+                                    val appLocale = LocaleListCompat.forLanguageTags(languageCode)
+                                    AppCompatDelegate.setApplicationLocales(appLocale)
+                                },
+                                onLogout = { isLoggedIn = false }
+                            )
+                        }
+                    }
                 }
             }
         }
-        checkLocationPermission()
     }
 
     private fun checkLocationPermission() {

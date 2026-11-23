@@ -15,6 +15,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.clickable
+
 
 @Composable
 fun LoginScreen(onLoginSuccess: () -> Unit) {
@@ -166,22 +168,6 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = "Don't have an account? ",
-                        fontSize = 14.sp,
-                        color = Color.Gray
-                    )
-                    Text(
-                        text = "Sign up",
-                        fontSize = 14.sp,
-                        color = Color(0xFF1A9ED4),
-                        fontWeight = FontWeight.Bold
-                    )
-                }
             }
         }
     }
