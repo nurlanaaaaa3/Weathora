@@ -456,9 +456,9 @@ fun WeatherScreen(
                     ) {
                         WeatherInfoCard(
                             emoji = "🌡️",
-                            label = "Terasa seperti",
+                            label = stringResource(R.string.feels_like),
                             value = "${weather.current.feelsLike}°",
-                            description = "Suhu yang dirasakan tubuh berdasarkan kelembapan dan angin.",
+                            description = stringResource(R.string.feels_like_desc),
                             modifier = Modifier.weight(1f)
                         )
                         WeatherInfoCard(
@@ -466,23 +466,23 @@ fun WeatherScreen(
                             label = stringResource(R.string.humidity),
                             value = "${weather.current.humidity}%",
                             description = when {
-                                weather.current.humidity < 30 -> "Kelembapan rendah. Udara terasa kering."
-                                weather.current.humidity < 60 -> "Kelembapan normal. Kondisi nyaman."
-                                weather.current.humidity < 80 -> "Kelembapan tinggi. Udara terasa lembap."
-                                else -> "Kelembapan sangat tinggi. Tidak nyaman."
+                                weather.current.humidity < 30 -> stringResource(R.string.humidity_low)
+                                weather.current.humidity < 60 -> stringResource(R.string.humidity_normal)
+                                weather.current.humidity < 80 -> stringResource(R.string.humidity_high)
+                                else -> stringResource(R.string.humidity_very_high)
                             },
                             modifier = Modifier.weight(1f)
                         )
                         WeatherInfoCard(
                             emoji = "☀️",
-                            label = "UV Index",
+                            label = stringResource(R.string.uv_index),
                             value = "${weather.current.uvIndex}",
                             description = when {
-                                weather.current.uvIndex < 3 -> "UV Rendah. Aman beraktivitas di luar."
-                                weather.current.uvIndex < 6 -> "UV Sedang. Gunakan tabir surya."
-                                weather.current.uvIndex < 8 -> "UV Tinggi. Hindari paparan langsung."
-                                weather.current.uvIndex < 11 -> "UV Sangat Tinggi. Gunakan pelindung."
-                                else -> "UV Ekstrem. Hindari keluar ruangan."
+                                weather.current.uvIndex < 3 -> stringResource(R.string.uv_low)
+                                weather.current.uvIndex < 6 -> stringResource(R.string.uv_moderate)
+                                weather.current.uvIndex < 8 -> stringResource(R.string.uv_high)
+                                weather.current.uvIndex < 11 -> stringResource(R.string.uv_very_high)
+                                else -> stringResource(R.string.uv_extreme)
                             },
                             modifier = Modifier.weight(1f)
                         )
@@ -497,10 +497,52 @@ fun WeatherScreen(
                             label = stringResource(R.string.wind),
                             value = "${weather.current.windSpeed} km/h",
                             description = when {
-                                weather.current.windSpeed < 20 -> "Angin lemah. Kondisi tenang."
-                                weather.current.windSpeed < 40 -> "Angin sedang. Terasa di wajah."
-                                weather.current.windSpeed < 60 -> "Angin kencang. Hati-hati berkendara."
-                                else -> "Angin sangat kencang. Berbahaya!"
+                                weather.current.windSpeed < 20 -> stringResource(R.string.wind_weak)
+                                weather.current.windSpeed < 40 -> stringResource(R.string.wind_moderate)
+                                weather.current.windSpeed < 60 -> stringResource(R.string.wind_strong)
+                                else -> stringResource(R.string.wind_dangerous)
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                        WeatherInfoCard(
+                            emoji = "🌬️",
+                            label = stringResource(R.string.pressure),
+                            value = "${weather.current.pressure} hPa",
+                            description = when {
+                                weather.current.pressure < 1000 -> stringResource(R.string.pressure_low)
+                                weather.current.pressure < 1013 -> stringResource(R.string.pressure_normal)
+                                else -> stringResource(R.string.pressure_high)
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                        WeatherInfoCard(
+                            emoji = "👁️",
+                            label = stringResource(R.string.visibility),
+                            value = "${"%.1f".format(weather.current.visibility / 1000)} km",
+                            description = when {
+                                weather.current.visibility < 1000 -> stringResource(R.string.visibility_very_low)
+                                weather.current.visibility < 5000 -> stringResource(R.string.visibility_low)
+                                weather.current.visibility < 10000 -> stringResource(R.string.visibility_moderate)
+                                else -> stringResource(R.string.visibility_good)
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        WeatherInfoCard(
+                            emoji = "💨",
+                            label = stringResource(R.string.wind),
+                            value = "${weather.current.windSpeed} km/h",
+                            description = when {
+                                weather.current.windSpeed < 20 -> stringResource(R.string.wind_weak)
+                                weather.current.windSpeed < 40 -> stringResource(R.string.wind_moderate)
+                                weather.current.windSpeed < 60 -> stringResource(R.string.wind_strong)
+                                else -> stringResource(R.string.wind_dangerous)
                             },
                             modifier = Modifier.weight(1f)
                         )
@@ -535,7 +577,7 @@ fun WeatherScreen(
             item {
                 hourlyWeather?.let { hourlyData ->
                     Text(
-                        text = "Prakiraan Per Jam",
+                        text = stringResource(R.string.hourly_forecast),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = WhiteText,

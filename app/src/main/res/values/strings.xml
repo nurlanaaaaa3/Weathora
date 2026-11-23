@@ -18,4 +18,31 @@
     <string name="weather_heavy_rain">Hujan Lebat</string>
     <string name="weather_storm">Badai Petir</string>
     <string name="weather_unknown">Tidak Diketahui</string>
+    <string name="wind_weak">Angin lemah. Kondisi tenang.</string>
+    <string name="wind_moderate">Angin sedang. Terasa di wajah.</string>
+    <string name="wind_strong">Angin kencang. Hati-hati berkendara.</string>
+    <string name="wind_dangerous">Angin sangat kencang. Berbahaya!</string>
+    <string name="feels_like">Terasa seperti</string>
+    <string name="feels_like_desc">Suhu yang dirasakan tubuh berdasarkan kelembapan dan angin.</string>
+    <string name="uv_index">UV Index</string>
+    <string name="uv_low">UV Rendah. Aman beraktivitas di luar.</string>
+    <string name="uv_moderate">UV Sedang. Gunakan tabir surya.</string>
+    <string name="uv_high">UV Tinggi. Hindari paparan langsung.</string>
+    <string name="uv_very_high">UV Sangat Tinggi. Gunakan pelindung.</string>
+    <string name="uv_extreme">UV Ekstrem. Hindari keluar ruangan.</string>
+    <string name="pressure">Tekanan</string>
+    <string name="pressure_low">Tekanan rendah. Kemungkinan hujan.</string>
+    <string name="pressure_normal">Tekanan normal. Cuaca stabil.</string>
+    <string name="pressure_high">Tekanan tinggi. Cuaca cerah.</string>
+    <string name="visibility">Visibilitas</string>
+    <string name="visibility_very_low">Visibilitas sangat rendah. Kabut tebal.</string>
+    <string name="visibility_low">Visibilitas rendah. Hati-hati berkendara.</string>
+    <string name="visibility_moderate">Visibilitas sedang. Cukup jelas.</string>
+    <string name="visibility_good">Visibilitas baik. Pandangan jelas.</string>
+    <string name="humidity_low">Kelembapan rendah. Udara terasa kering.</string>
+    <string name="humidity_normal">Kelembapan normal. Kondisi nyaman.</string>
+    <string name="humidity_high">Kelembapan tinggi. Udara terasa lembap.</string>
+    <string name="humidity_very_high">Kelembapan sangat tinggi. Tidak nyaman.</string>
+    <string name="hourly_forecast">Prakiraan Per Jam</string>
+
 </resources>
